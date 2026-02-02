@@ -15,7 +15,9 @@ jobs:
             - name: Checkout sources
               uses: actions/checkout@v4
 
-            - name: Build
+            - name: Dependencies
               run: |
                   dnf -y builddep nobara/kernel.spec
+            - name: build
+              run: |
                   rpmbuild -ba nobara/kernel.spec
