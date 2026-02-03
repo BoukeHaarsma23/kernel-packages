@@ -15,6 +15,11 @@ jobs:
             - name: Checkout sources
               uses: actions/checkout@v4
 
+            - name: Create rpbuild user
+              run: |
+                  useradd -m rpmbuild
+                  chown -vR rpmbuild .
+
             - name: Dependencies
               run: |
                   dnf -y builddep nobara/kernel.spec
