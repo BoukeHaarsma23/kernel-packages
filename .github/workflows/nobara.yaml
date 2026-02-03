@@ -20,5 +20,8 @@ jobs:
                   dnf -y builddep nobara/kernel.spec
             - name: build
               run: |
-                  id
-                  rpmbuild --define "_topdir `pwd`" -ba ./nobara/kernel.spec
+                  TOPDIR="$(pwd)/rpmbuild"
+
+                  mkdir -p "$TOPDIR"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+
+                  rpmbuild --define "_topdir $TOPDIR" -ba ./nobara/kernel.spec
