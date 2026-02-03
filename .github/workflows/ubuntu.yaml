@@ -1,0 +1,30 @@
+name: Build (ubuntu)
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    build-deb:
+        runs-on: ubuntu-latest
+
+        container:
+            image: ubuntu:latest
+
+        steps:
+            - name: Checkout sources
+              uses: actions/checkout@v4
+
+            - name: Dependencies
+              run: |
+                  export DEBIAN_FRONTEND=noninteractive
+                  apt-get update -y
+                  apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev  libslang2-dev lz4 rsync wget xmlto
+                  apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev dwarves zstd libbfd-dev libperl-dev
+            - name: Get sources
+              run: |
+                  wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.tar.xz
+                  tar -xf linux-6.18.tar.xz
+                  cd linux-6.18
+                  cp ../ubuntu/config .config
+                  fakeroot make -j$(nproc) deb-pkg
