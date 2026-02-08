@@ -10,8 +10,23 @@ jobs:
 
         container:
             image: ubuntu:latest
+            volumes:
+                - /usr:/usr-host
+                - /opt:/opt-host
+            options: --privileged
 
         steps:
+            - name: Maximize build space
+              run: |
+                  df -h
+                  rm -rf /usr-host/share/dotnet
+                  rm -rf /usr-host/share/swift
+                  rm -rf /usr-host/share/java
+                  rm -rf /usr-host/local/lib/android
+                  rm -rf /opt-host/ghc
+                  rm -rf /opt-host/hostedtoolcache
+                  rm -rf /opt-host/az
+                  df -h
             - name: Checkout sources
               uses: actions/checkout@v4
 
