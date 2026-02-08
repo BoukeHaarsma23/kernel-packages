@@ -18,7 +18,8 @@ jobs:
             - name: Create build user
               run: |
                   useradd -m build
-                  cp -vR arch /home/build/linux
+                  mkdir -p /home/build/linux
+                  cp -vR * /home/build/linux
                   chown -vR build /home/build/linux
 
             - name: Set up pacman keyring
@@ -35,7 +36,7 @@ jobs:
               id: build-kernel-package
               shell: bash
               run: |
-                  su build bash -c "cd /home/build/linux && MAKEFLAGS=-j$(nproc) makepkg --skippgpcheck"
+                  su build bash -c "cd /home/build/linux/arch && MAKEFLAGS=-j$(nproc) makepkg --skippgpcheck"
                   . /home/build/linux/PKGBUILD
                   full_version=${pkgver}-${pkgrel}
                   echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
